@@ -1,0 +1,150 @@
+﻿Count of site_id,site_id,site_name,NO_flag,NO2_flag,NOx_flag,Ozone_flag,PM10_flag,PM2.5_flag
+5,site_103,CRRI Mathura Road Delhi,1,1,1,1,1,1
+5,site_105,North Campus DU Delhi,1,1,1,1,1,1
+4,site_106,IGI Airport (T3) Delhi,1,1,1,1,1,1
+4,site_107,Pusa Delhi,1,1,1,1,1,1
+5,site_108,Aya Nagar Delhi,1,1,1,1,1,1
+5,site_109,Lodhi Road Delhi,1,1,1,1,1,1
+4,site_111,Sector 62 Noida,1,1,1,1,1,1
+3,site_113,Shadipur Delhi,1,1,1,1,1,1
+3,site_115,NSIT Dwarka Delhi,1,1,1,1,1,1
+4,site_117,ITO Delhi,1,1,1,1,1,1
+4,site_118,DTU Delhi,1,1,1,1,1,1
+3,site_119,Sirifort Delhi,1,1,1,1,1,1
+5,site_122,Mandir Marg Delhi,1,1,1,1,1,1
+4,site_124,R K Puram Delhi,1,1,1,1,1,1
+5,site_125,Punjabi Bagh Delhi,1,1,1,1,1,1
+4,site_136,Collectorate Jodhpur,1,1,1,1,1,1
+5,site_1390,Moti Doongri Alwar,1,1,1,1,1,1
+5,site_1391,RIICO Ind. Area III Bhiwadi,1,1,1,1,1,1
+5,site_1392,Civil Lines  Ajmer,1,1,1,1,1,1
+5,site_1393,Adarsh Nagar Jaipur,1,1,1,1,1,1
+5,site_1394,Shrinath Puram Kota,1,1,1,1,1,1
+5,site_1395,Indira Colony Vistar Pali,1,1,1,1,1,1
+5,site_1396,Shastri Nagar Jaipur,1,1,1,1,1,1
+5,site_1397,Ashok Nagar Udaipur,1,1,1,1,1,1
+5,site_1399,Anand Kala Kshetram Rajamahendravaram,1,1,1,1,1,1
+5,site_1402,Sector-2 Industrial Area Pithampur,1,1,1,1,1,1
+3,site_1403,Sector-D Industrial Area Mandideep,1,1,1,1,1,1
+5,site_1404,Bhopal Chauraha Dewas,1,1,1,1,1,1
+4,site_1406,Secretariat Amaravati,1,1,1,1,1,1
+5,site_1416,Padmapukur Howrah,1,1,1,1,1,1
+3,site_1418,Asansol Court Area Asansol,1,1,1,1,1,1
+5,site_1419,Ward-32 Bapupara Siliguri,1,1,1,1,1,1
+5,site_1420,Ashok Vihar Delhi,1,1,1,1,1,1
+5,site_1421,Dr. Karni Singh Shooting Range Delhi,1,1,1,1,1,1
+5,site_1422,Dwarka-Sector 8 Delhi DPCC,1,1,1,1,1,1
+5,site_1423,Jahangirpuri Delhi,1,1,1,1,1,1
+5,site_1424,Jawaharlal Nehru Stadium Delhi,1,1,1,1,1,1
+5,site_1425,Major Dhyan Chand National Stadium Delhi,1,1,1,1,1,1
+5,site_1426,Narela Delhi,1,1,1,1,1,1
+4,site_1427,Najafgarh Delhi,1,1,1,1,1,1
+5,site_1428,Okhla Phase-2 Delhi,1,1,1,1,1,1
+5,site_1429,Nehru Nagar Delhi,1,1,1,1,1,1
+5,site_1430,Rohini Delhi,1,1,1,1,1,1
+5,site_1431,Patparganj Delhi,1,1,1,1,1,1
+5,site_1432,Sonia Vihar Delhi,1,1,1,1,1,1
+4,site_1434,Wazirpur Delhi,1,1,1,1,1,1
+5,site_1435,Vivek Vihar Delhi,1,1,1,1,1,1
+5,site_1437,Model Town Patiala,1,1,1,1,1,1
+5,site_1438,Civil Line Jalandhar,1,1,1,1,1,1
+5,site_1450,Kalal Majra Khanna,1,1,1,1,1,1
+4,site_1541,Knowledge Park III Greater Noida,1,1,1,1,1,1
+4,site_1542,Yamunapuram Bulandshahr,1,1,1,1,1,1
+3,site_1553,Bapuji Nagar Bengaluru,1,1,1,1,1,1
+5,site_1555,Hombegowda Nagar Bengaluru,1,1,1,1,1,1
+5,site_1557,Chikkaballapur Rural Chikkaballapur,1,1,1,1,1,1
+5,site_1560,Bawana Delhi,1,1,1,1,1,1
+5,site_1561,Mundka Delhi,1,1,1,1,1,1
+5,site_1562,Sri Aurobindo Marg Delhi,1,1,1,1,1,1
+5,site_1563,Pusa Delhi,1,1,1,1,1,1
+3,site_199,Bollaram Industrial Area Hyderabad,1,1,1,1,1,1
+5,site_251,ICRISAT Patancheru Hyderabad,1,1,1,1,1,1
+5,site_253,Punjab Agricultural University Ludhiana,1,1,1,1,1,1
+5,site_256,Golden Temple Amritsar,1,1,1,1,1,1
+5,site_258,Tirumala Tirupati,1,1,1,1,1,1
+4,site_260,GVM Corporation Visakhapatnam,1,1,1,1,1,1
+3,site_262,Central University Hyderabad,1,1,1,1,1,1
+5,site_274,Ghusuri Howrah,1,1,1,1,1,1
+3,site_275,IDA Pashamylaram Hyderabad,1,1,1,1,1,1
+3,site_277,Lalbagh Lucknow,1,1,1,1,1,1
+3,site_296,Rabindra Bharati University Kolkata,1,1,1,1,1,1
+3,site_297,Talkatora District Industries Center Lucknow,1,1,1,1,1,1
+3,site_298,Zoo Park Hyderabad,1,1,1,1,1,1
+4,site_301,Anand Vihar Delhi,1,1,1,1,1,1
+4,site_304,Gangapur Road Nashik,1,1,1,1,1,1
+4,site_308,Maninagar Ahmedabad,1,1,1,1,1,1
+5,site_309,Victoria Kolkata,1,1,1,1,1,1
+5,site_5024,Alipur Delhi,1,1,1,1,1,1
+5,site_5025,NISE Gwal Pahari Gurugram,1,1,1,1,1,1
+5,site_5039,Sector-2 IMT Manesar,1,1,1,1,1,1
+5,site_5043,Sector-7 Kurukshetra,1,1,1,1,1,1
+4,site_5044,Municipal Corporation Office Dharuhera,1,1,1,1,1,1
+5,site_5045,Arya Nagar Bahadurgarh,1,1,1,1,1,1
+4,site_5046,Gobind Pura Yamuna Nagar,1,1,1,1,1,1
+3,site_5047,H.B. Colony Bhiwani,1,1,1,1,1,1
+4,site_5048,Sector-18 Panipat,1,1,1,1,1,1
+5,site_5049,Sector-12 Karnal,1,1,1,1,1,1
+5,site_5050,Shyam Nagar Palwal,1,1,1,1,1,1
+5,site_5051,F-Block Sirsa,1,1,1,1,1,1
+5,site_5052,Patti Mehar Ambala,1,1,1,1,1,1
+4,site_5053,Shastri Nagar Narnaul,1,1,1,1,1,1
+3,site_5054,Huda Sector Fatehabad,1,1,1,1,1,1
+3,site_5055,General Hospital Mandikhera,1,1,1,1,1,1
+5,site_5056,Police Lines Jind,1,1,1,1,1,1
+4,site_5057,Urban Estate-II Hisar,1,1,1,1,1,1
+5,site_5060,Nathu Colony Ballabgarh,1,1,1,1,1,1
+3,site_5065,GIDC Ankleshwar,1,1,1,1,1,1
+3,site_5066,Sector-10 Gandhinagar,1,1,1,1,1,1
+5,site_5067,Phase-4 GIDC Vatva,1,1,1,1,1,1
+4,site_5072,Rishi Nagar Kaithal,1,1,1,1,1,1
+5,site_5073,Railway Colony Guwahati,1,1,1,1,1,1
+4,site_5081,Sanjay Nagar Ghaziabad,1,1,1,1,1,1
+4,site_5082,Indirapuram Ghaziabad,1,1,1,1,1,1
+4,site_5083,Loni Ghaziabad,1,1,1,1,1,1
+3,site_5101,Belur Math Howrah,1,1,1,1,1,1
+3,site_5105,Udyogamandal Eloor Kerala,1,1,1,1,1,1
+3,site_5110,Fort William Kolkata,1,1,1,1,1,1
+4,site_5111,Jadavpur Kolkata,1,1,1,1,1,1
+3,site_5112,Powai Mumbai,1,1,1,1,1,1
+4,site_5119,Sion Mumbai,1,1,1,1,1,1
+4,site_5121,Knowledge Park V Greater Noida,1,1,1,1,1,1
+3,site_5122,Sector-116 Noida,1,1,1,1,1,1
+3,site_5123,Sector-1 Noida,1,1,1,1,1,1
+3,site_5124,Urban Chamarajanagar,1,1,1,1,1,1
+4,site_5126,Rabindra Sarobar Kolkata,1,1,1,1,1,1
+4,site_5127,Sector-25 Chandigarh,1,1,1,1,1,1
+4,site_5129,Bidhannagar Kolkata,1,1,1,1,1,1
+4,site_5238,Ballygunge Kolkata,1,1,1,1,1,1
+4,site_5247,T T Nagar Bhopal,1,1,1,1,1,1
+4,site_5248,Chhoti Gwaltoli Indore,1,1,1,1,1,1
+4,site_5249,Marhatal Jabalpur,1,1,1,1,1,1
+3,site_5250,Gole Bazar Katni,1,1,1,1,1,1
+3,site_5254,Collector Office Yadgir,1,1,1,1,1,1
+3,site_5255,Vijay Nagar Ramanagara,1,1,1,1,1,1
+4,site_5258,Ganga Nagar Meerut,1,1,1,1,1,1
+4,site_5261,Muradpur Patna,1,1,1,1,1,1
+3,site_5262,Rajbansi Nagar Patna,1,1,1,1,1,1
+4,site_5263,Samanpura Patna,1,1,1,1,1,1
+3,site_5264,Vidayagiri Bagalkot,1,1,1,1,1,1
+4,site_5265,Kalyana Nagara Chikkamagaluru,1,1,1,1,1,1
+3,site_5266,Vinoba Nagara Shivamogga,1,1,1,1,1,1
+3,site_5271,Palayam Kozhikode Kerala,1,1,1,1,1,1
+4,site_5273,City Center Gwalior,1,1,1,1,1,1
+3,site_5334,Polayathode Kollam Kerala,1,1,1,1,1,1
+3,site_5335,Govt. High School Shikarpur Patna,1,1,1,1,1,1
+3,site_5336,DRM Office Danapur Patna,1,1,1,1,1,1
+3,site_5338,SFTI Kusdihra Gaya,1,1,1,1,1,1
+3,site_5339,Mini Secretariat Charkhi Dadri,1,1,1,1,1,1
+3,site_5344,Teri Gram Gurugram,1,1,1,1,1,1
+3,site_5345,Sector-51 Gurugram,1,1,1,1,1,1
+3,site_5370,Buddha Colony Muzaffarpur,1,1,1,1,1,1
+3,site_5391,Stuart Hill Madikeri,1,1,1,1,1,1
+3,site_5404,Mhada Colony Pune,1,1,1,1,1,1
+3,site_5407,Hadapsar Pune,1,1,1,1,1,1
+3,site_5409,Revenue Colony-Shivajinagar Pune,1,1,1,1,1,1
+3,site_5420,Ashwini Nagar Haveri,1,1,1,1,1,1
+3,site_5421,Kadri Mangalore,1,1,1,1,1,1
+3,site_5423,Jawahar Nagar Puducherry,1,1,1,1,1,1
+3,site_5432,Ramteerth Nagar Belgaum,1,1,1,1,1,1
+4,site_5594,Doon University Dehradun,1,1,1,1,1,1

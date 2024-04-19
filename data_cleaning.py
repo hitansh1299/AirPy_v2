@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
-
+from datetime import datetime as time
 
 def outlier_treatment(datacolumn):
     """
@@ -104,14 +104,14 @@ def find_local_outliers(local_df, col):
     #interpolate the raw data while will be used to create flags
     local_df[col+'_int'] = interpolate_gaps(local_df[col].to_numpy(), limit= 2)
     
-    #group the values by stationID and get median value from the interpolated data
-    local_df["med"] = local_df.groupby("StationId")[col+'_int'].rolling(window = 4*3, min_periods = 4*3).median().values
+    #group the values by site_id and get median value from the interpolated data
+    local_df["med"] = local_df.groupby("site_id")[col+'_int'].rolling(window = 4*3, min_periods = 4*3).median().values
     
     #get the absolute difference between the actual value and median on running 3 hr window only if all 12 values where present
     local_df["med_2"] = (local_df[col+'_int'] - local_df["med"]).abs()
     
     #get the median of med_2
-    local_df["mad"] = local_df.groupby("StationId")["med_2"].rolling(window = 4*3, min_periods = 4*3).median().values
+    local_df["mad"] = local_df.groupby("site_id")["med_2"].rolling(window = 4*3, min_periods = 4*3).median().values
 
     #calculate the MAD outlier threshold
     local_df["t"] = ((local_df[col]-local_df["med"]) / local_df["mad"]).abs()
@@ -174,8 +174,8 @@ def find_repeats(local_df, col):
     local_df[col+'_int'] = local_df[col+'_int'] +1
     
     #calculate the mean, standard deviation of maniputed data in the rolling window of 1 day
-    local_df["med"] = local_df.groupby("StationId")[col+'_int'].rolling(window = 4*24*2, min_periods = 1).mean().values
-    local_df["std"] = local_df.groupby("StationId")[col+'_int'].rolling(window = 4*24*2, min_periods = 1).std().values
+    local_df["med"] = local_df.groupby("site_id")[col+'_int'].rolling(window = 4*24*2, min_periods = 1).mean().values
+    local_df["std"] = local_df.groupby("site_id")[col+'_int'].rolling(window = 4*24*2, min_periods = 1).std().values
     
     #calculate co-variance
     local_df["t"] = (local_df["std"]/local_df['med'])
@@ -254,39 +254,19 @@ def find_abs_rep(local_df, col, filename):
 
     """
     unchanged = local_df.copy(deep = True)
-
     ar1 = interpolate_gaps(local_df[col].to_numpy(), limit=2)
     local_df[col + '_ab_rep'] = ar1
-    values_repeats = []
-    count_repeats = []
-    starttime = []
-    endtime = []
-    for k, v in local_df.groupby((local_df[col + '_ab_rep'].shift() != local_df[col + '_ab_rep']).cumsum()):
-        if (len(v[col + '_ab_rep']) >= 4) == True:
-            values_repeats.append(v[col].iloc[-1].item())
-            count_repeats.append(len(v[col + '_ab_rep']))
-            starttime.append(v['dates'].iloc[0])
-            endtime.append(v['dates'].iloc[-1])
-            local_df['hint'] = local_df.dates.between((v['dates'].iloc[0]), (v['dates'].iloc[-1]))
-            local_df[col + '_ab_rep'] = np.where(local_df['hint'] == True, np.nan, local_df[col + '_ab_rep'])
-
-    temp = pd.DataFrame(
-        {'values_repeats': values_repeats,
-         'count_repeats': count_repeats,
-         'starttime':starttime ,
-         "endtime": endtime,
-         "pol_name": col,
-         'station_name': filename
-        })
-
-    with open('HTMLS/' + str(filename) + ".html", 'a') as f:
-        f.write(temp.sort_values(by=['count_repeats'], ascending = False)[:5].to_html())
+    local_df['hint'] = local_df[col + '_ab_rep'].loc[(local_df[col + '_ab_rep'].shift() != local_df[col + '_ab_rep']) & 
+                                    (local_df[col + '_ab_rep'].shift(2) != local_df[col + '_ab_rep']) &
+                                    (local_df[col + '_ab_rep'].shift(3) != local_df[col + '_ab_rep']) &
+                                    (local_df[col + '_ab_rep'].shift(4) != local_df[col + '_ab_rep'])]
+    local_df[col + '_ab_rep'] = np.where(local_df['hint'] == True, np.nan, local_df[col + '_ab_rep'])
     unchanged[col + '_ab_rep'] = local_df[col + '_ab_rep']
     return unchanged
 
 
 
-def group_plot(only_plots, local_df, col, label,station_name,filename, st_no):
+def group_plot(local_df, col, label,station_name,filename, plot: bool = True, year = 2017):
     """
     function removes consecutive repeats within a local timeseries 
     
@@ -317,41 +297,18 @@ def group_plot(only_plots, local_df, col, label,station_name,filename, st_no):
         
 
     """
-
     df_temp = find_repeats(local_df, col)
     df_temp = find_abs_rep(df_temp, col, filename)
     df = find_local_outliers(df_temp, col)
 
 
 
-    #Plot the results
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=only_plots['dates'], y=only_plots[col],mode='markers',line=dict(color='red'), name='actual',marker=dict( size = 1)))
-    fig.add_trace(go.Scatter(x=df_temp['dates'], y=df_temp[col+'_consecutives'], mode='markers',line=dict(color='black'), name='Constant values',marker=dict( size = 1)))
-    fig.add_trace(go.Scatter(x=df['dates'], y=df[col+'_outliers'], mode='markers',line=dict(color='blue'), name='Outlier cleaner',marker=dict( size = 1)))
-    fig.update_layout(legend= {'itemsizing': 'constant'}, template = "simple_white")
+    
     if (col == 'PM25')or(col == 'PM10') or (col == 'SO2') or (col == 'Ozone'):
         yaxis_title= str(label) + " concentration in µg/m³"
-        fig.update_layout(xaxis_title="Date", yaxis_title= str(label) + " concentration in µg/m³")
+        # fig.update_layout(xaxis_title="Date", yaxis_title= str(label) + " concentration in µg/m³")
     else:
         yaxis_title= str(label) + " concentration in reported units"
-        fig.update_layout(xaxis_title="Date", yaxis_title= str(label) + " concentration in reported units")
-    fig.update_layout(legend=dict(yanchor="top",xanchor="left"))
-    fig.update_traces(mode='lines')
-    fig.add_annotation(text= "Station ID: " + str(st_no),
-                        align='left',
-                        showarrow=False,
-                        xref='paper',
-                        yref='paper',
-                        x=0.01,
-                        y=0.95,
-                        bordercolor='black',
-                        borderwidth=1)
-    fig.update_layout(legend= {'itemsizing': 'constant'}, template = "simple_white")
-    fig.update_layout(legend=dict(yanchor="top",xanchor="left"))
-    
-
-    figures_to_html_app([fig], filename+'.html')
 
     true_df = local_df.copy(deep=True)
     true_df[col+'_consecutives'] = df_temp[col+'_consecutives']
@@ -361,24 +318,23 @@ def group_plot(only_plots, local_df, col, label,station_name,filename, st_no):
     Plots the diurnal curve before and after cleaning
 
     """
-    fig, ax = plt.subplots()
-    df = true_df
-    get_diurnal(df, col + '_consecutives', 'blue', 'title', ax)
-    get_diurnal(df, col + '_outliers', 'cyan', 'title', ax)
-    get_diurnal(df, col, 'red', 'title', ax)
-    plt.title(str(station_name))
-    plt.xticks(np.arange(0,24, 1.0))
-    plt.grid(color = '#F5F5F5')
-    ax.axvspan(16, 20, alpha=0.1, color='red', label = 'Peak traffic hours')
-    ax.axvspan(7, 11, alpha=0.1, color='red')
-    ax.legend(loc='upper right')
-    plt.xlabel("Hours")
-    plt.ylabel(str(yaxis_title))
-    plt.show(block=False)
-
-    write_html_fig(fig, filename)
-
-
+    if plot:
+        fig, ax = plt.subplots()
+        df = true_df
+        get_diurnal(df, col + '_consecutives', 'blue', 'title', ax)
+        get_diurnal(df, col + '_outliers', 'cyan', 'title', ax)
+        get_diurnal(df, col, 'red', 'title', ax)
+        plt.title(str(station_name))
+        plt.xticks(np.arange(0,24, 1.0))
+        plt.grid(color = '#F5F5F5')
+        ax.axvspan(16, 20, alpha=0.1, color='red', label = 'Peak traffic hours')
+        ax.axvspan(7, 11, alpha=0.1, color='red')
+        ax.legend(loc='upper right')
+        plt.xlabel("Hours")
+        plt.ylabel(str(yaxis_title))
+        # plt.show(block=False)
+        plt.savefig('new_data/plots/' + str(station_name) + '_' + str(year) + '_' + str(col) +'.png')
+        # write_html_fig(fig, filename)
     return true_df
 
 

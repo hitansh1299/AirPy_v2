@@ -4,7 +4,7 @@ from io import BytesIO
 Writes different formats of images to HTMLS
 """
 def figures_to_html_app(figs, station_name):
-    with open('HTMLS/' + str(station_name), 'a') as dashboard:
+    with open('HTMLS/' + str(station_name), 'a', encoding='utf-8') as dashboard:
         dashboard.write("<html><head></head><body>" + "\n")
         for fig in figs:
 

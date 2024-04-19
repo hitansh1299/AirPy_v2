@@ -252,11 +252,11 @@ def convert_cluster_wise(local_df):
         
         
         TEMP = clean_dataset(TEMP[['NO', 'NO2', 'NOx']])
-        X1 = TEMP['NOx'].values.astype(np.float)
-        y1 =  ((TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23)/1.23).values.astype(np.float)
+        X1 = TEMP['NOx'].values.astype(float)
+        y1 =  ((TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23)/1.23).values.astype(float)
 
-        X2 = (TEMP['NOx']*1.9125).values.astype(np.float)
-        y2 =  ((TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23)).values.astype(np.float)
+        X2 = (TEMP['NOx']*1.9125).values.astype(float)
+        y2 =  ((TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23)).values.astype(float)
 
         #check for mean square error to determine the good fit
         if mean_squared_error(X1, y1) < mean_squared_error(X2, y2):
@@ -276,7 +276,7 @@ def convert_cluster_wise(local_df):
     return local_df
 
 
-def correct_unit_inconsistency(df,filename, get_input):
+def correct_unit_inconsistency(df,filename, get_input, plot=False):
     
     """
     Adjusts the values as per cases (blue, red, violet or yellow) when user specifies "M" as cluster condition 
@@ -379,25 +379,27 @@ def correct_unit_inconsistency(df,filename, get_input):
     
     
     #Plot the NOx and sum of NO and NO2 in ppb, assuming the reported units are correct
-    fig, ax = plt.subplots()
+    
     
     #remove all rows, for which units are not identified
     TEMP = df[df['score'] != 'yellow']
+    if plot:
+        fig, ax = plt.subplots()
+        ax.scatter(TEMP['NOx'], (TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23), c = TEMP['score'].to_list())
+        ax.set_title("Before unit conversion")
+        ax.set_xlabel("NO" + '$_{X}$'+ '[ppb]')
+        ax.set_ylabel("NO" + '$_{2}$'+ '+ NO [ppb]')
+        
+        #plot a solid black 1:1 line 
+        plt.plot([1, np.nanmax(TEMP['NOx'])],[1,np.nanmax(TEMP['NOx'])], c = 'black')
 
-    ax.scatter(TEMP['NOx'], (TEMP["NO2"])*(1/1.88) + (TEMP["NO"])*(1/1.23), c = TEMP['score'].to_list())
-    ax.set_title("Before unit conversion")
-    ax.set_xlabel("NO" + '$_{X}$'+ '[ppb]')
-    ax.set_ylabel("NO" + '$_{2}$'+ '+ NO [ppb]')
-    
-    #plot a solid black 1:1 line 
-    plt.plot([1, np.nanmax(TEMP['NOx'])],[1,np.nanmax(TEMP['NOx'])], c = 'black')
 
-
-    #upload the figure in HTML
-    write_html_fig(fig, filename)
-    
-    #Show the image to the user even inside the loop
-    plt.show(block=False)    
+        #upload the figure in HTML
+        # write_html_fig(fig, filename)
+        
+        #Show the image to the user even inside the loop
+        # plt.show(block=False)    
+        plt.savefig('new_data/plots/' + str(filename) + '_unit_inconsistency_before_correction' +'.png')
     
     
     options = ['C1 (red)', 'C2 (blue)', 'M (many clusters)', '0 (None)']
@@ -435,22 +437,26 @@ def correct_unit_inconsistency(df,filename, get_input):
         color = TEMP.groupby(['score']).count().index.to_list()
         label = []
         for name in color:
-            label += [color_to_case(name)]    
-        TEMP.groupby(['score']).count().plot(kind='pie', y='NOx_CPCB', colors = color,
-                                                 labels = label)
+            label += [color_to_case(name)]  
+        if plot:
+            TEMP.groupby(['score']).count().plot(kind='pie', y='NOx_CPCB', colors = color,
+                                                    labels = label)
+            plt.savefig('new_data/plots/' + str(filename) + '_unit_inconsistency_piechart' +'.png')
 
-    #show the scatter plot post unit correction
-    fig, ax = plt.subplots()
-    TEMP = local_df[local_df['score'] != 'yellow']
-    ax.scatter(TEMP['NOx_CPCB'], (TEMP["NO2_CPCB"])*(1/1.88) + (TEMP["NO_CPCB"])*(1/1.23), c = TEMP['score'].to_list())    
-    #Plot a 1:1 line
-    plt.plot([1, np.nanmax(TEMP['NOx_CPCB'])],[1,np.nanmax(TEMP['NOx_CPCB'])], c = 'black')
-    ax.set_title("After unit conversion")
-    ax.set_xlabel("NO" + '$_{X}$'+ ' [ppb]')
-    ax.set_ylabel("NO" + '$_{2}$'+ '+ NO [ppb]')
-    #upload the figure in the HTML
-    write_html_fig(fig, filename)
-    plt.show(block=False)
+    if plot:
+        #show the scatter plot post unit correction
+        fig, ax = plt.subplots()
+        TEMP = local_df[local_df['score'] != 'yellow']
+        ax.scatter(TEMP['NOx_CPCB'], (TEMP["NO2_CPCB"])*(1/1.88) + (TEMP["NO_CPCB"])*(1/1.23), c = TEMP['score'].to_list())    
+        #Plot a 1:1 line
+        plt.plot([1, np.nanmax(TEMP['NOx_CPCB'])],[1,np.nanmax(TEMP['NOx_CPCB'])], c = 'black')
+        ax.set_title("After unit conversion")
+        ax.set_xlabel("NO" + '$_{X}$'+ ' [ppb]')
+        ax.set_ylabel("NO" + '$_{2}$'+ '+ NO [ppb]')
+        #upload the figure in the HTML
+        # write_html_fig(fig, filename)
+        plt.savefig('new_data/plots/' + str(filename) + '_unit_inconsistency_after_correction' +'.png')
+        # plt.show(block=False)
     
     #format all the data in ppb    
     local_df['NO_ppb'] = (local_df["NO_CPCB"])*(1/1.23)

@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
+import re
 
 
-def get_formatted_df(path):
+def get_formatted_df(path, station_name=None, city=None, state=None):
     
     """
     function removes null entries and formats the date column
@@ -27,37 +28,49 @@ def get_formatted_df(path):
     st_no: int
         unique identifier for the station
 
-    """    
-    try:
-        #gets station name from the filename
-        station_name = path.split("\\")[-1].split("_")[0].replace(".csv", "")
-        station_name, city, state = station_name, station_name, station_name
-    except:
-        station_name = path.split("\\")[-1].replace(".csv", "")
-        station_name, city, state = station_name, station_name, station_name
-        pass
-    try:
-        df = pd.read_csv(path)
-        try:
-            station_name = path.split("\\")[-1].split("_")[0].replace(".csv", "")
-            station_name, city, state = station_name, station_name, station_name
-        except:
-            station_name = path.split("\\")[-1].replace(".csv", "")
-            station_name, city, state = station_name, station_name, station_name
-            pass
+    """ 
+    # if not (station_name and city and state): 
+    #     try:
+    #         #gets station name from the filename
+    #         station_name = path.split("\\")[-1].split("_")[0].replace(".csv", "")
+    #         station_name, city, state = station_name, station_name, station_name
+    #     except:
+    #         station_name = path.split("\\")[-1].replace(".csv", "")
+    #         station_name, city, state = station_name, station_name, station_name
+    #         pass
+    #     try:
+    #         df = pd.read_csv(path)
+    #         try:
+    #             station_name = path.split("\\")[-1].split("_")[0].replace(".csv", "")
+    #             station_name, city, state = station_name, station_name, station_name
+    #         except:
+    #             station_name = path.split("\\")[-1].replace(".csv", "")
+    #             station_name, city, state = station_name, station_name, station_name
+    #             pass
 
-    except:
-        try:
-            #this is specific for cpcb outputs without any intervention
-            df = pd.read_excel(path)
-            df, from_date, to_date, station_name, city, state = get_multiple_df_linerized(df)
-        except:
-            print("provide data in specified formats")
-            pass
-    df = read_df(df)
-    
+    #     except:
+    #         try:
+    #             #this is specific for cpcb outputs without any intervention
+    #             df = pd.read_excel(path)
+    #             df, from_date, to_date, station_name, city, state = get_multiple_df_linerized(df)
+    #         except:
+    #             print("provide data in specified formats")
+    #             pass
+    #     df = read_df(df)
+        
+    #     #removes any invalid columns which has suffix as Unname
+    #     df.drop(df.filter(regex="Unname"),axis=1, inplace=True)
+    #     return df, station_name, city, state
+    # else:
+    #     df = pd.read_csv(path)
+    #     df = read_df(df)        
+    #     #removes any invalid columns which has suffix as Unname
+    #     # df.drop(df.filter(regex="Unname"),axis=1, inplace=True)
+    #     return df, station_name, city, state
+    df = pd.read_csv(path)
+    df = read_df(df)        
     #removes any invalid columns which has suffix as Unname
-    df.drop(df.filter(regex="Unname"),axis=1, inplace=True)
+    # df.drop(df.filter(regex="Unname"),axis=1, inplace=True)
     return df, station_name, city, state
 
 
@@ -65,29 +78,13 @@ def get_formatted_df(path):
 def read_df(df):
     
     #tries to fit the dates column in different formats
-    if 'dates' in df.columns:
-        try:
-            df['dates']=pd.to_datetime(df['dates'], format="%Y-%m-%d %H:%M")
-        except:
-            df['dates']=pd.to_datetime(df['dates'], format="%d-%m-%Y %H:%M")
-            pass
-    elif 'date' in df.columns:
-        try:
-            df['date']=pd.to_datetime(df['date'], format="%Y-%m-%d %H:%M")
-        except:
-            df['date']=pd.to_datetime(df['date'], format="%d-%m-%Y %H:%M")
-            pass
-    else:
-        try:
-            df['dates']=pd.to_datetime(df['From Date'], format="%Y-%m-%d %H:%M")
-        except:
-            try:
-                df['dates']=pd.to_datetime(df['From Date'], format="%d-%m-%Y %H:%M")
-            except:
-                "date formats not matching"
-                pass
-            pass
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
         
+    #rename df
+    df = df.rename(columns = {i : re.sub('\(([^\)]+)\)','',i).strip() for i in df.columns})
+    df = df.rename(columns = {'PM2.5':'PM25', 'Timestamp':'dates'})
+    # print(df.columns)
+
     #cleans all data for null entries and replaces with np.nan
     try:
         df['PM10'] =  pd.to_numeric(df.PM10, errors='coerce')
