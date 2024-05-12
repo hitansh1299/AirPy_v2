@@ -312,7 +312,7 @@ def group_plot(local_df, col, label,station_name,filename, plot: bool = True, ye
 
     true_df = local_df.copy(deep=True)
     true_df[col+'_consecutives'] = df_temp[col+'_consecutives']
-    true_df[col+'_outliers'] =df[col+'_outliers']
+    true_df[col+'_outliers'] = df[col+'_outliers']
     
     """
     Plots the diurnal curve before and after cleaning
