@@ -17,6 +17,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from math import ceil, floor
 from datetime import datetime
+
+from copy import deepcopy
 #==========================================================
 #=========================================================
 
@@ -30,8 +32,8 @@ Sample:
 
 def get_colorbar(pollutant: str) -> matplotlib.colors.LinearSegmentedColormap:
     if pollutant == 'NO2' or pollutant == 'Ozone':
-        colors = ["#c1e0ff",'#c1e0ff','#fcd059', "#ffcd74", "#FFA500", "#FF6347", "#FF4500", "#FF0000"]
-        cvals  = [-20,-10, 0, 20, 40, 60, 80, 100]
+        colors = ["#c1e0ff",'#fcd059', "#ffcd74", "#FFA500", "#FF6347", "#FF4500", "#FF0000"]
+        cvals  = [-20, 0, 20, 40, 60, 80, 100]
         norm=plt.Normalize()
         norm.autoscale(cvals)
         tuples = list(zip(map(norm,cvals), colors))
@@ -50,73 +52,70 @@ def create_map_plots(mean_summary: pd.DataFrame, count_summary: pd.DataFrame, ye
     suffix = ['_clean','_CPCB','_clean','_clean']
     axes = [(0,0), (0,1), (1,0), (1,1)]
     sites_master = pd.read_csv(r"CPCB_Issues\AirPy_v2\sites_master.csv")
+    size_consts = {'PM25': 0.7, 'PM10': 0.35, 'NO2': 0.7, 'Ozone': 0.7}
     def plot_all(ax, df: pd.DataFrame, colorbar):
-        CONST = 0.25
-        CONST = 0.5 * CONST if pol == 'PM10' else 1
-        
-        temp = df
-        temp = df[(df[pol+'_DA']<75) | (df[pol+'_DA'] == np.nan) | (df[pol] == np.nan) | (df[pol + suffix[idx]] == 1)]
-        print(temp['Percentage_change'].min(), temp['Percentage_change'].max())
-        if len(temp['Percentage_change'].dropna()) == 0:
-            return
+        CONST = size_consts[pol]
+        temp = df[df[pol+'_DA'] <= 75]
 
         ax.scatter(temp['lon'], temp['lat'], label=None, c= '#808080', 
                                 edgecolors='#808080', 
                                 s=10, linewidth=0.1, alpha=1) # Plot all gray sites
         
-        df = df[df[pol+'_DA'] > 75] # Plot only sites with more than 75% data availability
+        temp = df[df[pol+'_DA'] > 75] # Plot only sites with more than 75% data availability
         # temp = df[(df[pol+'_DA']>75) & (df['Percentage_change'] > -20) & (df['Percentage_change'] < 100)]
-        temp = df[(df['Percentage_change'] > -20) & (df['Percentage_change'] < 100)]
-        # temp = df
+        temp = temp[(temp['Percentage_change'] > -20) & (temp['Percentage_change'] < 100)]
         cmap, cvals = get_colorbar(pol)
         # print('MAX: ',int(ceil(temp['Percentage_change'].max())), int(ceil(temp['Percentage_change'].min())))
         # MAIN PLOT
-        z1_plot = ax.scatter(temp['lon'], temp['lat'], label=None, c= temp['Percentage_change'], 
+        normalizer = (min(cvals), max(cvals))
+        temp = temp.sort_values(by='Percentage_change')
+        z1_plot = ax.scatter(temp['lon'], temp['lat'], label=None, c=temp['Percentage_change'], 
                                 cmap=cmap, 
-                                # vmin = 0, 
-                                # vmax = int(ceil(temp['Percentage_change'].max())),
-                                edgecolors='#c0c0c0', 
+                                vmin = normalizer[0], 
+                                vmax = normalizer[1],
+                                edgecolors='#707070', 
                                 s=temp['pollutant_after_cleaning']*CONST, 
-                                # s=2,
-                                linewidth=0.1, alpha=1) 
+                                linewidth=0.25, alpha=1) 
         if colorbar == True: 
             cbaxes = inset_axes(ax, width="30%", height="3%",loc='lower right',
                                 bbox_to_anchor=(-0.13,0.14,1,1), bbox_transform=axs[axes[idx][0], axes[idx][1]].transAxes) 
-        
-            cbar = plt.colorbar(z1_plot, cbaxes,orientation='horizontal', ticks = np.linspace(min(cvals), max(cvals), len(cvals) - 1), shrink = 1)
+            cvals = np.array(cvals)
+            N = len(cvals)
+            cbar = plt.colorbar(z1_plot, cbaxes,orientation='horizontal', ticks = np.linspace(min(cvals),max(cvals),N), shrink = 1)
             cbar.dividers.set_linewidth(0.4)
             cbaxes.set_title("Change in annual mean "+  pol + ' [%]', fontsize = 5.5)
-            cbaxes.tick_params(labelsize=6,width = 0.4)
+            cbaxes.tick_params(labelsize=5,width = 0.5)
             cbar.outline.set_linewidth(0.4)
             #plot legend
-            cleaned_min = int(floor((temp['pollutant_after_cleaning']*0.25).min()))
-            cleaned_max = int(ceil((temp['pollutant_after_cleaning']*0.25).max()))
+            cleaned_min = int(floor((temp['pollutant_after_cleaning']*CONST).min()))
+            cleaned_max = int(ceil((temp['pollutant_after_cleaning']*CONST).max()))
             base = 5
             for area in (np.ceil(np.linspace(cleaned_min, cleaned_max, 3)/base) * base):
+                if area == 0: area = 1
                 ax.scatter([], [], c='k', alpha=1, s=area,
                             label = area)
             ax.legend(scatterpoints=1, frameon=False,loc="upper right",
-                    labelspacing=0.5, title='Annual mean'+"\n"+
+                    labelspacing=1, title='Annual mean'+"\n"+
                                             '    [µg m' + '$^{-3}$' + ']',
                     prop={'size': 6}, bbox_to_anchor =(0.89, 0.99), ncol = 1).get_title().set_fontsize('6')
 
             # temp = df[df[pol+'_DA']>75]
-            temp = temp[temp['compliance_change'] == 1]
-
-            z1_plot = ax.scatter(temp['lon'], temp['lat'], label=None, c= temp['Percentage_change'], 
-                                    cmap=cmap, 
-                                    #    vmax=100,
-                                    edgecolors='black', 
-                                    #    vmin = -20, 
-                                    s=temp['pollutant_after_cleaning']*CONST, linewidth=0.5, alpha=1)
+        temp_compliance = temp[temp['compliance_change'] == 1]
+        ax.scatter(temp_compliance['lon'], temp_compliance['lat'], label=None, c=temp_compliance['Percentage_change'], 
+                                cmap=cmap, 
+                                #    vmax=100,
+                                edgecolors='black', 
+                                #    vmin = -20, 
+                                s=temp_compliance['pollutant_after_cleaning']*CONST, linewidth=0.5, alpha=1)
         
-
+        temp = df[df[pol+'_DA'] > 75]
         temp1 = temp[temp['Percentage_change'] > 100]
     #     print(temp)
-        ax.scatter(temp1['lon'], temp1['lat'], label=None, c= '#00008B', s=temp1['pollutant_after_cleaning']*CONST, 
+        ax.scatter(temp1['lon'], temp1['lat'], label=None, c= '#630000', s=temp1['pollutant_after_cleaning']*CONST*0.8, 
                 linewidth=0.5, alpha=1, edgecolors='black')
+        
         temp2 = temp[temp['Percentage_change'] < -20]
-        ax.scatter(temp2['lon'], temp2['lat'], label=None, c= '#00008B', s=temp2['pollutant_after_cleaning']*CONST, 
+        ax.scatter(temp2['lon'], temp2['lat'], label=None, c= '#00008B', s=temp2['pollutant_after_cleaning']*CONST*0.8,     
                 linewidth=0.5, alpha=1, edgecolors='black')
 
     fig, axs = plt.subplots(2, 2,figsize=(7,9),sharey=True,sharex=True)
@@ -136,12 +135,14 @@ def create_map_plots(mean_summary: pd.DataFrame, count_summary: pd.DataFrame, ye
 
 
     plt.subplots_adjust(wspace=0, hspace=0)
+
     for idx, pollutant in enumerate(pollutants):
         print('PLOTTING FOR: ', year, pollutant)
         #Choose which sites to plot for this pollutant
         pol = pollutant
-        df = mean_summary[mean_summary['year'] == year].copy()
+        df = deepcopy(mean_summary)
         df[pol+'_DA'] = (count_summary[pol]/count_summary['timestamp']) * 100
+        df = df[df['year'] == year]
         if (len(site_list) > 0):
             if 'pollutant' in site_list.columns:
                 df = df[df['site_id'].isin(site_list.loc[site_list['pollutant'] == pollutant, 'site_id'])]
@@ -151,10 +152,12 @@ def create_map_plots(mean_summary: pd.DataFrame, count_summary: pd.DataFrame, ye
         print(len(df['site_id']))
         df['lat'] = df['site_id'].map(sites_master.set_index('site_id')['latitude'])
         df['lon'] = df['site_id'].map(sites_master.set_index('site_id')['longitude'])
-        df = df [[pol, pol+suffix[idx], 'site_name', 'lat' , 'lon', pol+'_DA']].copy()
-        df['Percentage_change'] = (df[pol + suffix[idx]] - df[pol])*100/df[pol]
-        # df['compliance_change'] = np.where((df[pol+suffix[idx]] - df[pol]).abs()/df[pol], 1, 0)
-        # df['compliance_change'] = np.where((df[pol+suffix[idx]] - df[pol]))
+        df = df[[pol, pol+suffix[idx], 'site_name', 'lat' , 'lon', pol+'_DA']].copy()
+        df['Percentage_change'] = (df[pol + suffix[idx]] - df[pol])*100/df[pol] #(After - Before) / Before
+
+        COMPLIANCE_THRESHOLD = 40 if pol in ['NO2','PM25'] else 100
+        df['compliance_change'] = ((df[pol] > COMPLIANCE_THRESHOLD) & (df[pol+suffix[idx]] < COMPLIANCE_THRESHOLD)) | ((df[pol] < COMPLIANCE_THRESHOLD) & (df[pol+suffix[idx]] > COMPLIANCE_THRESHOLD))
+            
 
         df['before_com'] = np.where(df[pol] > 40,1 , 0)
         df['after_com'] = np.where(df[pol + suffix[idx]] > 40,1 , 0)
@@ -168,6 +171,7 @@ def create_map_plots(mean_summary: pd.DataFrame, count_summary: pd.DataFrame, ye
 
         cities['un_compliance_change'] = cities['compliance_change']
         print(cities['compliance_change'].value_counts())
+        
         mumbai = df[(df['lat'] > 19.03) & (df['lat'] < 19.112) & (df['lon'] > 72.82) & (df['lon'] < 72.9)]
         kolkata = df[(df['lat'] > 22.48) & (df['lat'] < 22.662) & (df['lon'] > 88.25) & (df['lon'] < 88.45)]
         delhi = df[(df['lat'] > 28.34) & (df['lat'] < 28.88) & (df['lon'] > 76.08) & (df['lon'] < 77.4)]
@@ -230,17 +234,17 @@ def create_map_plots(mean_summary: pd.DataFrame, count_summary: pd.DataFrame, ye
 
         axs[axes[idx][0], axes[idx][1]].annotate('3', xy=(76+0.8, 27.49+0.85),ha="center", va="center", color='black', fontsize=6,
                bbox=dict(boxstyle='square', facecolor='white', edgecolor='black',lw=0.4))
-    plt.suptitle(f"YEAR: {year}")
-    plt.savefig(f'CPCB_Issues/AirPy_v2/new_data/summary/final_plots/{year}_4map_plot_new_{datetime.now().strftime("%Y%m%d_%H%M")}.png', dpi=300)
+        plt.suptitle(f"YEAR: {year}")
+        plt.savefig(f'CPCB_Issues/AirPy_v2/new_data/summary/final_plots/{year}_4map_plot_new_{datetime.now().strftime("%Y%m%d_%H%M")}.png', dpi=300)
 
     # plt.show()
 
 if __name__ == '__main__':
-    years = [2019,2020,2021,2022,2023]
-    # years = [2020, 202]
+    # years = [2019,2020,2021,2022,2023]
+    years = [2019]
     for year in years:
-        mean_summary = pd.read_csv(r"CPCB_Issues\AirPy_v2\new_data\summary\summary_mean_all.csv")
-        count_summary = pd.read_csv(r"CPCB_Issues\AirPy_v2\new_data\summary\summary_count_all.csv")
+        mean_summary = pd.read_csv(r"CPCB_Issues\AirPy_v2\new_data\summary\summary_mean_2019.csv")
+        count_summary = pd.read_csv(r"CPCB_Issues\AirPy_v2\new_data\summary\summary_count_2019.csv")
         
         sites_to_plot = pd.read_csv(r"CPCB_Issues\AirPy_v2\final_site_list_new.csv")
         # sites_to_plot = pd.read_csv(r"C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\original_40_sites.csv")[0:40]

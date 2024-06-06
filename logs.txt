@@ -1,16 +1,18 @@
 EXCEPTION OCCURED IN 481 : site_1549_Hardev_Nagar_Bathinda_PPCB_15Min_2022.csv
 Traceback (most recent call last):
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 101, in <module>
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 106, in <module>
     local_df = correct_unit_inconsistency(local_df,filename, mixed_unit_identification, plot=True)
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 394, in correct_unit_inconsistency
-    plt.plot([1, np.nanmax(TEMP['NOx'])],[1,np.nanmax(TEMP['NOx'])], c = 'black')
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\lib\nanfunctions.py", line 483, in nanmax
-    res = np.amax(a, axis=axis, out=out, **kwargs)
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 2827, in amax
-    return _wrapreduction(a, np.maximum, 'max', axis, None, out,
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 88, in _wrapreduction
-    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-ValueError: zero-size array to reduction operation maximum which has no identity
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 69, in correct_unit_inconsistency
+    prevalent_error = temp['error'].value_counts().idxmax()
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\series.py", line 2564, in idxmax
+    i = self.argmax(axis, skipna, *args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\base.py", line 655, in argmax
+    return nanops.nanargmax(  # type: ignore[return-value]
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 93, in _f
+    return f(*args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 1104, in nanargmax
+    result = values.argmax(axis)  # type: ignore[var-annotated]
+ValueError: attempt to get argmax of an empty sequence
 
 ================================================================
 
@@ -18,17 +20,19 @@ ValueError: zero-size array to reduction operation maximum which has no identity
 
 EXCEPTION OCCURED IN 1113 : site_5071_Phase-1_GIDC_Vapi_GPCB_15Min_2023.csv
 Traceback (most recent call last):
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 103, in <module>
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 106, in <module>
     local_df = correct_unit_inconsistency(local_df,filename, mixed_unit_identification, plot=True)
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 394, in correct_unit_inconsistency
-    plt.plot([1, np.nanmax(TEMP['NOx'])],[1,np.nanmax(TEMP['NOx'])], c = 'black')
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\lib\nanfunctions.py", line 483, in nanmax
-    res = np.amax(a, axis=axis, out=out, **kwargs)
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 2827, in amax
-    return _wrapreduction(a, np.maximum, 'max', axis, None, out,
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 88, in _wrapreduction
-    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-ValueError: zero-size array to reduction operation maximum which has no identity
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 69, in correct_unit_inconsistency
+    prevalent_error = temp['error'].value_counts().idxmax()
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\series.py", line 2564, in idxmax
+    i = self.argmax(axis, skipna, *args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\base.py", line 655, in argmax
+    return nanops.nanargmax(  # type: ignore[return-value]
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 93, in _f
+    return f(*args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 1104, in nanargmax
+    result = values.argmax(axis)  # type: ignore[var-annotated]
+ValueError: attempt to get argmax of an empty sequence
 
 ================================================================
 
@@ -36,17 +40,19 @@ ValueError: zero-size array to reduction operation maximum which has no identity
 
 EXCEPTION OCCURED IN 1519 : site_5331_Kariavattom_Thiruvananthapuram_Kerala_PCB_15Min_2023.csv
 Traceback (most recent call last):
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 103, in <module>
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\main.py", line 106, in <module>
     local_df = correct_unit_inconsistency(local_df,filename, mixed_unit_identification, plot=True)
-  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 394, in correct_unit_inconsistency
-    plt.plot([1, np.nanmax(TEMP['NOx'])],[1,np.nanmax(TEMP['NOx'])], c = 'black')
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\lib\nanfunctions.py", line 483, in nanmax
-    res = np.amax(a, axis=axis, out=out, **kwargs)
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 2827, in amax
-    return _wrapreduction(a, np.maximum, 'max', axis, None, out,
-  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\numpy\core\fromnumeric.py", line 88, in _wrapreduction
-    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-ValueError: zero-size array to reduction operation maximum which has no identity
+  File "c:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\CPCB_Issues\AirPy_v2\unit_inconsistency.py", line 69, in correct_unit_inconsistency
+    prevalent_error = temp['error'].value_counts().idxmax()
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\series.py", line 2564, in idxmax
+    i = self.argmax(axis, skipna, *args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\base.py", line 655, in argmax
+    return nanops.nanargmax(  # type: ignore[return-value]
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 93, in _f
+    return f(*args, **kwargs)
+  File "C:\Users\hitan\OneDrive\Desktop\MiniProjects\ML_NMIMS Codes\.venv\lib\site-packages\pandas\core\nanops.py", line 1104, in nanargmax
+    result = values.argmax(axis)  # type: ignore[var-annotated]
+ValueError: attempt to get argmax of an empty sequence
 
 ================================================================
 

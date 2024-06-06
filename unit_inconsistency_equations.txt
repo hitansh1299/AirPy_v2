@@ -1,0 +1,40 @@
+#conversion factors for NO, NO2 and NOx from ppb to µg/m3
+#Governing Equation: NO(ppb) + NO2(ppb) = NOx(ppb)
+NO2_FACTOR = 1.88 # 1 ppb = 1.88 µg/m3
+NO_FACTOR = 1.23 # 1 ppb = 1.23 µg/m3
+NOx_FACTOR = 1.9125 # (NO ppb + NO2 ppb) * 1.9125 = NOx µgm-3. 
+
+'''
+Conversion Equations
+--------------------
+C1: NO: µg/m3, NO2: µg/m3, NOx: ppb
+C2: NO: ppb, NO2: ppb, NOx: ppb
+C3: NO: ppb, NO2: ppb, NOx: µg/m3
+C4: NO: ppb, NO2: µg/m3, NOx: ppb
+C5: NO: ppb, NO2: µg/m3, NOx: µg/m3
+C6: NO: µg/m3, NO2: ppb, NOx: ppb
+C7: NO: µg/m3, NO2: ppb, NOx: µg/m3
+C8: NO: µg/m3, NO2: µg/m3, NOx: µg/m3
+'''
+
+VALIDATE_EQUATIONS = {
+    'C1' : lambda NO, NO2, NOx: (NO/NO_FACTOR) + (NO2/NO2_FACTOR) - NOx,                        
+    'C2' : lambda NO, NO2, NOx: (NO) + (NO2) - NOx,                                             
+    'C3' : lambda NO, NO2, NOx: (NO) + (NO2) - (NOx/NOx_FACTOR),                      
+    'C4' : lambda NO, NO2, NOx: (NO) + (NO2/NO2_FACTOR) - (NOx),                         
+    'C5' : lambda NO, NO2, NOx: (NO) + (NO2/NO2_FACTOR) - (NOx/NOx_FACTOR),                
+    'C6' : lambda NO, NO2, NOx: (NO/NO_FACTOR) + (NO2) - NOx,                                  
+    'C7' : lambda NO, NO2, NOx: (NO/NO_FACTOR) + (NO2) - (NOx/NOx_FACTOR),                                 
+    'C8' : lambda NO, NO2, NOx: (NO/NO_FACTOR) + (NO2/NO_FACTOR) - (NOx/NOx_FACTOR),                                
+}
+
+CONVERSION_EQUATIONS = {
+    'C1' : lambda NO, NO2, NOx: (NO , NO2, NOx),
+    'C2' : lambda NO, NO2, NOx: (NO * NO_FACTOR, NO2 *  NO2_FACTOR, NOx),
+    'C3' : lambda NO, NO2, NOx: (NO * NO_FACTOR, NO2 * NO2_FACTOR, (NO + NO2)),
+    'C4' : lambda NO, NO2, NOx: (NO * NO_FACTOR, NO2, NOx),
+    'C5' : lambda NO, NO2, NOx: (NO * NO_FACTOR, NO2, (NO + NO2 / NO2_FACTOR)),
+    'C6' : lambda NO, NO2, NOx: (NO , NO2 * NO2_FACTOR, NOx),
+    'C7' : lambda NO, NO2, NOx: (NO , NO2 * NO2_FACTOR, (NO / NO_FACTOR + NO2)),
+    'C8' : lambda NO, NO2, NOx: (NO , NO2, (NO/NO_FACTOR + NO2/NO2_FACTOR)),
+}

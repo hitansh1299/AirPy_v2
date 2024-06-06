@@ -16,30 +16,33 @@ from datetime import datetime as time
 from NO_count_mismatch import NO_count_mismatch
 import glob
 import traceback
+import gc
 
 os.chdir('CPCB_Issues/AirPy_v2')
 
 data_dir = Path('../data/')
-save_dir = Path('new_data/After_Cleaning/')
+save_dir = Path('new_data/After_Cleaning_New/')
 # save_dir = Path(r'temp/')
 files = os.listdir(data_dir)
 sites = pd.read_csv('sites.csv')
-start = 1330
+start = 77
+# start = 0
 
 prospective_sites = pd.read_csv('final_site_list_new.csv').drop_duplicates(subset=['site_id'])
-print(prospective_sites)
+# print(prospective_sites)
 # prospective_sites = pd.read_csv(r'../original_40_sites.csv')
 
 # prospective_sites = pd.DataFrame(prospective_sites, columns=['site_id']).drop_duplicates()
 
 # print(prospective_sites)
 processed_sites =  set(['_'.join(os.path.basename(x).split('_')[0:2]) for x in glob.glob(f'{save_dir}*')])
-print(processed_sites)
-years = [2019,2020,2021,2022,2023]
+# print(processed_sites)
+# years = [2019,2020,2021,2022,2023]
+years = [2019]
 
-# print(*list(filter(lambda x: x[1].startswith('site_5127'), enumerate(files))), sep='\n')
+# print(*list(filter(lambda x: 'COPY' in x[1], enumerate(files))), sep='\n')
 # exit()
-for idx, file in enumerate(files[start:], start=start):
+for idx, file in enumerate(files[start:start+1], start=start):
     try:
         print(idx)
         filepath = os.path.join(data_dir, file)
@@ -55,7 +58,7 @@ for idx, file in enumerate(files[start:], start=start):
             ):
                 print("Skipping", site_id,site_name,year , '|', idx)
                 continue
-
+        gc.collect()
         # print(site_name)
         print(filepath)
         city = sites[sites['site_code'] == site_id]['city'].values[0]
@@ -89,7 +92,7 @@ for idx, file in enumerate(files[start:], start=start):
                 print("No available ", pollutant, " data")
                 continue
             else:
-                local_df = group_plot(local_df, pollutant, pollutant,station_name,filename, plot=True)           
+                local_df = group_plot(local_df, pollutant, pollutant,station_name,filename, plot=False)           
                 local_df[pollutant + '_hourly'] = local_df.groupby("site_id")[pollutant].rolling(window = 4*1, min_periods = 1).mean().values
                 local_df[pollutant + '_clean'] = local_df[pollutant + '_outliers']
                 local_df[pollutant + '_clean'].mask(local_df[pollutant+ '_hourly'] < 0, np.nan, inplace=True)
