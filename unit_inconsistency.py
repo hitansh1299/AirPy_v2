@@ -46,9 +46,7 @@ CONVERSION_EQUATIONS = {
 }
 def correct_unit_inconsistency(df,filename, get_input, plot=False):
     df['dates']=pd.to_datetime(df['dates'], format="%Y-%m-%d %H:%M")
-    print('DEEP COPYING')
     temp = deepcopy(df)
-    print('DEEP COPIED')
     errors = {}
     
     for equation in VALIDATE_EQUATIONS:
@@ -58,15 +56,13 @@ def correct_unit_inconsistency(df,filename, get_input, plot=False):
         temp[equation] = error
         print(equation)
     print('OOL')
-    PERCENTAGE_FACTOR = 0.01
+    PERCENTAGE_FACTOR = 1
     CONSTANT_FACTOR = 1
-    print('OOL2')
-    # temp['unidentifiable_flag'] = temp[[*list(errors.keys())]].abs().gt((temp['NOx_clean'].abs() * PERCENTAGE_FACTOR) + CONSTANT_FACTOR).all(axis='columns')
-    print(temp[[*list(errors.keys())]].abs().gt((temp['NOx_clean'].abs() * PERCENTAGE_FACTOR) + CONSTANT_FACTOR, axis='index').any(axis='columns'))
-    temp['unidentifiable_flag'] = temp[[*list(errors.keys())]].abs().gt((temp['NOx_clean'].abs() * PERCENTAGE_FACTOR) + CONSTANT_FACTOR, axis='index').all(axis='columns')
+    temp['THRESHOLD'] = (temp['NOx_clean'].abs() * PERCENTAGE_FACTOR) + CONSTANT_FACTOR
+    temp['unidentifiable_flag'] = temp[[*list(errors.keys())]].abs().gt(temp['THRESHOLD'], axis='index').all(axis='columns')
     temp['error'] = temp[[*list(errors.keys())]].abs().idxmin(axis=1)
     temp['error'][temp['unidentifiable_flag']] = 'UNIDENTIFIABLE'
-    prevalent_error = temp['error'].value_counts().idxmax()
+    
     # converted_values = CONVERSION_EQUATIONS[prevalent_error](temp['NO_clean'], temp['NO2_clean'], temp['NOx_clean'])
     temp['NO_CPCB'] = np.nan
     temp['NO2_CPCB'] = np.nan
@@ -86,14 +82,12 @@ def correct_unit_inconsistency(df,filename, get_input, plot=False):
     temp['NO2_CPCB'][df['NO2_clean'].isna()] = np.nan
     temp['NOx_CPCB'][df['NOx_clean'].isna()] = np.nan
 
-    # temp['NO_CPCB'][temp['unidentifiable_flag']] = np.nan
-    # temp['NO2_CPCB'][temp['unidentifiable_flag']] = np.nan
-    # temp['NOx_CPCB'][temp['unidentifiable_flag']] = np.nan
-
 
     temp['NO_CPCB'][temp['NO_clean'].isna() | temp['NO2_clean'].isna() | temp['NOx_clean'].isna()] = np.nan
     temp['NO2_CPCB'][temp['NO_clean'].isna() | temp['NO2_clean'].isna() | temp['NOx_clean'].isna()] = np.nan
     temp['NOx_CPCB'][temp['NO_clean'].isna() | temp['NO2_clean'].isna() | temp['NOx_clean'].isna()] = np.nan
+
+
 
     # print(prevalent_error)
     # print(converted_values)
@@ -101,6 +95,8 @@ def correct_unit_inconsistency(df,filename, get_input, plot=False):
     df['NO_CPCB'] = temp['NO_CPCB']
     df['NO2_CPCB'] = temp['NO2_CPCB']
     df['NOx_CPCB'] = temp['NOx_CPCB']
+    df['Threshold'] = temp['THRESHOLD']
+    df['Interesting'] = temp['THRESHOLD'] > temp['C1'].abs()
     for equation in VALIDATE_EQUATIONS:
         df[equation] = temp[equation]
     #Set All NO, NO2 and NOx to NaN if either one of them is NaN

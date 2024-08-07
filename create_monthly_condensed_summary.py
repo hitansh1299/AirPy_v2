@@ -33,13 +33,8 @@ def summarize_count_file(files: list):
 if __name__ == '__main__':
     import os
     files = glob.glob('CPCB_Issues/AirPy_v2/new_data/After_Cleaning/*')
-    final_site_list = pd.read_csv('CPCB_Issues/AirPy_v2/final_site_list.csv')
+    final_site_list = pd.read_csv('CPCB_Issues/AirPy_v2/final_site_list_new.csv')
     files = list(filter(lambda x: '_'.join(os.path.basename(x).split('_')[0:2]) in final_site_list['site_id'].values, files))
-    summarize_count_file(files).to_csv('CPCB_Issues/AirPy_v2/new_data/summary/monthly_condensed.csv', index=False)
-    # summarize_mean_file(files).to_csv('CPCB_Issues/AirPy_v2/new_data/summary/summary_mean_all.csv', index=False)
-    # summary_count = summarize_count_file(files)
-    # summary_count[summary_count['site_id'].isin(final_site_list['site_id'])].to_csv('CPCB_Issues/AirPy_v2/new_data/summary/summary_count_final.csv', index=False)
-    # summary_mean = summarize_mean_file(files)
-    # summary_mean[summary_mean['site_id'].isin(final_site_list['site_id'])].to_csv('CPCB_Issues/AirPy_v2/new_data/summary/summary_mean_final.csv', index=False)
+    summarize_count_file(files).to_csv('CPCB_Issues/AirPy_v2/new_data/summary/monthly_condensed_new.csv', index=False)
 
     

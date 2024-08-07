@@ -25,24 +25,18 @@ save_dir = Path('new_data/After_Cleaning_New/')
 # save_dir = Path(r'temp/')
 files = os.listdir(data_dir)
 sites = pd.read_csv('sites.csv')
-start = 77
+start = 2
 # start = 0
 
 prospective_sites = pd.read_csv('final_site_list_new.csv').drop_duplicates(subset=['site_id'])
-# print(prospective_sites)
-# prospective_sites = pd.read_csv(r'../original_40_sites.csv')
-
-# prospective_sites = pd.DataFrame(prospective_sites, columns=['site_id']).drop_duplicates()
-
-# print(prospective_sites)
 processed_sites =  set(['_'.join(os.path.basename(x).split('_')[0:2]) for x in glob.glob(f'{save_dir}*')])
 # print(processed_sites)
-# years = [2019,2020,2021,2022,2023]
-years = [2019]
+years = [2019,2020,2021,2022,2023]
+# years = [2019]
 
 # print(*list(filter(lambda x: 'COPY' in x[1], enumerate(files))), sep='\n')
 # exit()
-for idx, file in enumerate(files[start:start+1], start=start):
+for idx, file in enumerate(files[start:], start=start):
     try:
         print(idx)
         filepath = os.path.join(data_dir, file)

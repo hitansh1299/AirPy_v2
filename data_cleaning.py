@@ -165,7 +165,7 @@ def find_repeats(local_df, col):
     
     #try to forward interpolate the data
     try:
-        local_df[col+'_int'] = interpolate_gaps(local_df[col].to_numpy(), limit= 2)
+        local_df[col+'_int'] = interpolate_gaps(local_df[col].to_numpy(), limit = 0)
     except:
         local_df[col+'_int'] = local_df[col]
         pass
@@ -182,9 +182,10 @@ def find_repeats(local_df, col):
     
     #mask all consecutive repeats with t < 0.1 as np.nan
     local_df[col+'consecutives'].mask(local_df['t'] < 0.1, np.nan, inplace=True)
-    
+
     #create a local copy of data cleaned for consecutives in unchanged
     unchanged[col+'_consecutives'] = local_df[col+'consecutives']
+
     return unchanged
 
 def interpolate_gaps(values, limit=None):
